@@ -1,0 +1,67 @@
+Log.Open
+RunApp "com.zeptolab.cats"
+ReleaseCapture
+
+Dim screenWidth = 1242, screenHeight = 2208
+Dim fastA, fastB, confirmA, confirmB, observeA, observeB
+Dim similarity = 0.8
+
+TracePrint "屏幕旋转" & GetScreenRotation()
+
+If GetScreenRotation() = 3 Then
+	fastA = Array(1163, 617, "152F62")        // 箱子最中间
+	fastB = Array(1164, 610, "05005b")        // 箱子两侧
+	confirmA = Array(1047, 1159, "c2f4ff")    // 按钮文字
+	confirmB = Array(1034, 1165, "2523d2")    // 按钮背景
+	observeA = Array(1110, 76, "2523d2")      // 右下角按钮背景 1098 1166
+	observeB = Array(1132, 357, "0057ec")     // 右下角金币中心
+Else 
+	fastA = Array(screenHeight - 1163, screenWidth - 617, "152F62")
+	fastB = Array(screenHeight - 1164, screenWidth - 610, "05005b")
+	confirmA = Array(screenHeight - 1047, screenWidth - 1159, "c2f4ff")
+	confirmB = Array(screenHeight - 1034, screenWidth - 1165, "2523d2")
+	observeA = Array(screenHeight - 1110, screenWidth - 76, "2523d2")
+	observeB = Array(screenHeight - 1132, screenWidth - 357, "0057ec")
+End If
+
+TracePrint EnableFastCapture(true)
+
+While true
+
+	Delay 100
+
+	If CmpColor(fastA[1], fastA[2], fastA[3], similarity) > -1 and CmpColor(fastB[1], fastB[2], fastB[3], similarity) > -1 Then
+		TouchDown fastA[1], fastB[2], 1
+		TouchUp 1
+		Delay 300
+	Else
+		TracePrint "没有找到快速战斗"
+		TracePrint fastA[1], fastA[2], GetPixelColor(fastA[1], fastA[2])
+		TracePrint fastB[1], fastB[2], GetPixelColor(fastB[1], fastB[2])
+	End If
+
+	Delay 100
+
+	If CmpColor(confirmA[1], confirmA[2], confirmA[3], similarity) > -1 and CmpColor(confirmB[1], confirmB[2], confirmB[3], similarity) > -1 Then
+		TouchDown confirmA[1], confirmA[2], 2
+		TouchUp 2
+		Delay 300
+	Else
+		TracePrint "没有找到好的"
+		TracePrint confirmA[1], confirmA[2], GetPixelColor(confirmA[1], confirmA[2])
+		TracePrint confirmB[1], confirmB[2], GetPixelColor(confirmB[1], confirmB[2])
+	End If
+
+	Delay 100
+
+	If CmpColor(observeA[1], observeA[2], observeA[3], similarity) > -1 and CmpColor(observeB[1], observeB[2], observeB[3], similarity) > -1 Then
+		TouchDown 539, 1104, 3
+		TouchUp 3
+		Delay 3000
+	Else
+		TracePrint "没有找到观战"
+		TracePrint observeA[1], observeA[2], GetPixelColor(observeA[1], observeA[2])
+		TracePrint observeB[1], observeB[2], GetPixelColor(observeB[1], observeB[2])
+	End If
+	
+Wend
